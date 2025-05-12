@@ -1,0 +1,100 @@
+{
+  "name": "devtools",
+  "displayName": "DevTools",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.79.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "icon": "media/tools.png",
+  "activationEvents": [
+    "onView:devtools.general" 
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "devtools.generateUUID",
+        "title": "UUID 生成"
+      },
+      {
+        "command": "devtools.base64Encode",
+        "title": "Base64 编码"
+      },
+      {
+        "command": "devtools.base64Decode",
+        "title": "Base64 解码"
+      },
+      {
+        "command": "devtools.hash.md5",
+        "title": "MD5 哈希"
+      },
+      {
+        "command": "devtools.hash.sha1",
+        "title": "SHA1 哈希"
+      },
+      {
+        "command": "devtools.hash.sha256",
+        "title": "SHA256 哈希"
+      },
+      {
+        "command": "devtools.regexTester",
+        "title": "正则表达式测试"
+      },
+      {
+        "command": "devtools.jsonFormat",
+        "title": "JSON 格式化"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "devtools",
+          "title": "DevTools",
+          "icon": "media/tools.png"
+        }
+      ]
+    },
+    "views": {
+      "devtools": [
+        {
+          "id": "devtools.general",
+          "name": "通用工具"
+        },
+        {
+          "id": "devtools.time",
+          "name": "时间工具"
+        },
+        {
+          "id": "devtools.coding",
+          "name": "编码辅助"
+        },
+        {
+          "id": "devtools.debug",
+          "name": "开发调试工具"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test",
+    "dev": "vscode-test",
+    "compile": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.8",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.79.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.11.1"
+  },
+  "dependencies": {
+    "uuid": "^11.1.0"
+  }
+}
