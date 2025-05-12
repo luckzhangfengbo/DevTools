@@ -47,7 +47,19 @@
       {
         "command": "devtools.jsonFormat",
         "title": "JSON 格式化"
-      }
+      },
+      {
+        "command": "devtools.timestamp.now",
+        "title": "当前时间戳"
+      },
+      {
+        "command": "devtools.timestamp.convert",
+        "title": "时间戳 ↔ 日期互转"
+      },
+      {
+        "command": "devtools.timestamp.utc",
+        "title": "UTC时间"
+      } 
     ],
     "viewsContainers": {
       "activitybar": [
