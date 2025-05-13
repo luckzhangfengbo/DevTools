@@ -6,7 +6,7 @@
   "engines": {
     "vscode": "^1.76.0"
   },
-  "publisher":"MyDevTools",
+  "publisher": "MyDevTools",
   "repository": {
     "type": "git",
     "url": "https://github.com/luckzhangfengbo/DevTools"
@@ -126,6 +126,7 @@
     "eslint": "^9.11.1"
   },
   "dependencies": {
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "vsce": "^2.15.0"
   }
 }

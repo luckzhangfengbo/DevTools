@@ -729,7 +729,7 @@ function getTimestampWebviewContent() {
 }
 function getTimestampWebviewHtml() {
 	return `
-	<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
@@ -810,8 +810,10 @@ function getTimestampWebviewHtml() {
       <div class="form-row">
         <input type="text" id="timestampInput" placeholder="输入时间戳">
         <select id="unitSelect">
-          <option value="s">秒(s)</option>
-          <option value="ms">毫秒(ms)</option>
+          <option value="s">秒 (s)</option>
+          <option value="ms">毫秒 (ms)</option>
+          <option value="us">微秒 (μs)</option>
+          <option value="ns">纳秒 (ns)</option>
         </select>
         <button onclick="convertToDate()">转换</button>
         <span class="result" id="dateResult" contenteditable="true"></span>
@@ -827,8 +829,10 @@ function getTimestampWebviewHtml() {
         <button onclick="convertToTimestamp()">转换</button>
         <span class="result" id="timestampResult" contenteditable="true"></span>
         <select id="unitSelect2">
-          <option value="s">秒(s)</option>
-          <option value="ms">毫秒(ms)</option>
+          <option value="s">秒 (s)</option>
+          <option value="ms">毫秒 (ms)</option>
+          <option value="us">微秒 (μs)</option>
+          <option value="ns">纳秒 (ns)</option>
         </select>
       </div>
     </div>
@@ -850,15 +854,27 @@ function getTimestampWebviewHtml() {
     timezoneSelect2.value = 'Asia/Shanghai';
 
     function convertToDate() {
-      const timestamp = document.getElementById('timestampInput').value.trim();
+      const input = document.getElementById('timestampInput').value.trim();
       const unit = document.getElementById('unitSelect').value;
       const zone = document.getElementById('timezoneSelect').value;
 
-      if (!timestamp) return;
+      if (!input) return;
 
-      const ts = unit === 's' ? Number(timestamp) * 1000 : Number(timestamp);
+      let tsNum = Number(input);
+      if (isNaN(tsNum)) {
+        document.getElementById('dateResult').textContent = '无效时间戳';
+        return;
+      }
+
+      switch (unit) {
+        case 's': tsNum *= 1000; break;
+        case 'ms': break;
+        case 'us': tsNum /= 1000; break;
+        case 'ns': tsNum /= 1_000_000; break;
+      }
+
       try {
-        const date = new Date(ts);
+        const date = new Date(tsNum);
         const result = new Intl.DateTimeFormat('zh-CN', {
           timeZone: zone,
           dateStyle: 'full',
@@ -880,17 +896,23 @@ function getTimestampWebviewHtml() {
       const localTime = new Date(datetime);
       const utcTime = new Date(localTime.toLocaleString('en-US', { timeZone: zone }));
 
-      const ts = utcTime.getTime();
-      const result = unit === 's' ? Math.floor(ts / 1000) : ts;
+      let ts = utcTime.getTime(); // 毫秒
 
-      document.getElementById('timestampResult').textContent = result;
+      switch (unit) {
+        case 's': ts = Math.floor(ts / 1000); break;
+        case 'ms': break;
+        case 'us': ts *= 1000; break;
+        case 'ns': ts *= 1_000_000; break;
+      }
+
+      document.getElementById('timestampResult').textContent = ts.toString();
     }
   </script>
 </body>
 </html>
-
 	`;
 }
+
 function getUtcWebviewHtml() {
 	return `
 	<!DOCTYPE html>

@@ -1,0 +1,340 @@
+<!-- <!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>时间戳 ↔ 日期互转</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f7f9fb;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 1.4em;
+      color: #0d1117;
+      border-left: 4px solid #3b82f6;
+      padding-left: 12px;
+    }
+    .section {
+      margin-bottom: 30px;
+    }
+    .form-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    input[type="text"], select, input[type="datetime-local"] {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      flex: 1;
+      min-width: 180px;
+      font-size: 14px;
+    }
+    button {
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    button:hover {
+      background-color: #2563eb;
+    }
+    .result {
+      font-weight: bold;
+      color: #1d4ed8;
+      margin-left: 8px;
+      min-width: 160px;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      user-select: text;
+      cursor: text;
+      padding: 4px;
+      background: #f0f8ff;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="section">
+      <h2>🕒 时间戳转日期时间</h2>
+      <div class="form-row">
+        <input type="text" id="timestampInput" placeholder="输入时间戳">
+        <select id="unitSelect">
+          <option value="s">秒(s)</option>
+          <option value="ms">毫秒(ms)</option>
+        </select>
+        <button onclick="convertToDate()">转换</button>
+        <span class="result" id="dateResult" contenteditable="true"></span>
+        <select id="timezoneSelect"></select>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📅 日期时间转时间戳</h2>
+      <div class="form-row">
+        <input type="datetime-local" id="dateInput">
+        <select id="timezoneSelect2"></select>
+        <button onclick="convertToTimestamp()">转换</button>
+        <span class="result" id="timestampResult" contenteditable="true"></span>
+        <select id="unitSelect2">
+          <option value="s">秒(s)</option>
+          <option value="ms">毫秒(ms)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const timezones = Intl.supportedValuesOf('timeZone');
+    const timezoneSelect = document.getElementById('timezoneSelect');
+    const timezoneSelect2 = document.getElementById('timezoneSelect2');
+
+    timezones.forEach(zone => {
+      const opt1 = new Option(zone, zone);
+      const opt2 = new Option(zone, zone);
+      timezoneSelect.add(opt1);
+      timezoneSelect2.add(opt2);
+    });
+
+    timezoneSelect.value = 'Asia/Shanghai';
+    timezoneSelect2.value = 'Asia/Shanghai';
+
+    function convertToDate() {
+      const timestamp = document.getElementById('timestampInput').value.trim();
+      const unit = document.getElementById('unitSelect').value;
+      const zone = document.getElementById('timezoneSelect').value;
+
+      if (!timestamp) return;
+
+      const ts = unit === 's' ? Number(timestamp) * 1000 : Number(timestamp);
+      try {
+        const date = new Date(ts);
+        const result = new Intl.DateTimeFormat('zh-CN', {
+          timeZone: zone,
+          dateStyle: 'full',
+          timeStyle: 'long'
+        }).format(date);
+        document.getElementById('dateResult').textContent = result;
+      } catch {
+        document.getElementById('dateResult').textContent = '无效时间戳';
+      }
+    }
+
+    function convertToTimestamp() {
+      const datetime = document.getElementById('dateInput').value;
+      const zone = document.getElementById('timezoneSelect2').value;
+      const unit = document.getElementById('unitSelect2').value;
+
+      if (!datetime) return;
+
+      const localTime = new Date(datetime);
+      const utcTime = new Date(localTime.toLocaleString('en-US', { timeZone: zone }));
+
+      const ts = utcTime.getTime();
+      const result = unit === 's' ? Math.floor(ts / 1000) : ts;
+
+      document.getElementById('timestampResult').textContent = result;
+    }
+  </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>时间戳 ↔ 日期互转</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f7f9fb;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 1.4em;
+      color: #0d1117;
+      border-left: 4px solid #3b82f6;
+      padding-left: 12px;
+    }
+    .section {
+      margin-bottom: 30px;
+    }
+    .form-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    input[type="text"], select, input[type="datetime-local"] {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      flex: 1;
+      min-width: 180px;
+      font-size: 14px;
+    }
+    button {
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    button:hover {
+      background-color: #2563eb;
+    }
+    .result {
+      font-weight: bold;
+      color: #1d4ed8;
+      margin-left: 8px;
+      min-width: 160px;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      user-select: text;
+      cursor: text;
+      padding: 4px;
+      background: #f0f8ff;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="section">
+      <h2>🕒 时间戳转日期时间</h2>
+      <div class="form-row">
+        <input type="text" id="timestampInput" placeholder="输入时间戳">
+        <select id="unitSelect">
+          <option value="s">秒 (s)</option>
+          <option value="ms">毫秒 (ms)</option>
+          <option value="us">微秒 (μs)</option>
+          <option value="ns">纳秒 (ns)</option>
+        </select>
+        <button onclick="convertToDate()">转换</button>
+        <span class="result" id="dateResult" contenteditable="true"></span>
+        <select id="timezoneSelect"></select>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📅 日期时间转时间戳</h2>
+      <div class="form-row">
+        <input type="datetime-local" id="dateInput">
+        <select id="timezoneSelect2"></select>
+        <button onclick="convertToTimestamp()">转换</button>
+        <span class="result" id="timestampResult" contenteditable="true"></span>
+        <select id="unitSelect2">
+          <option value="s">秒 (s)</option>
+          <option value="ms">毫秒 (ms)</option>
+          <option value="us">微秒 (μs)</option>
+          <option value="ns">纳秒 (ns)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const timezones = Intl.supportedValuesOf('timeZone');
+    const timezoneSelect = document.getElementById('timezoneSelect');
+    const timezoneSelect2 = document.getElementById('timezoneSelect2');
+
+    timezones.forEach(zone => {
+      const opt1 = new Option(zone, zone);
+      const opt2 = new Option(zone, zone);
+      timezoneSelect.add(opt1);
+      timezoneSelect2.add(opt2);
+    });
+
+    timezoneSelect.value = 'Asia/Shanghai';
+    timezoneSelect2.value = 'Asia/Shanghai';
+
+    function convertToDate() {
+      const input = document.getElementById('timestampInput').value.trim();
+      const unit = document.getElementById('unitSelect').value;
+      const zone = document.getElementById('timezoneSelect').value;
+
+      if (!input) return;
+
+      let tsNum = Number(input);
+      if (isNaN(tsNum)) {
+        document.getElementById('dateResult').textContent = '无效时间戳';
+        return;
+      }
+
+      switch (unit) {
+        case 's': tsNum *= 1000; break;
+        case 'ms': break;
+        case 'us': tsNum /= 1000; break;
+        case 'ns': tsNum /= 1_000_000; break;
+      }
+
+      try {
+        const date = new Date(tsNum);
+        const result = new Intl.DateTimeFormat('zh-CN', {
+          timeZone: zone,
+          dateStyle: 'full',
+          timeStyle: 'long'
+        }).format(date);
+        document.getElementById('dateResult').textContent = result;
+      } catch {
+        document.getElementById('dateResult').textContent = '无效时间戳';
+      }
+    }
+
+    function convertToTimestamp() {
+      const datetime = document.getElementById('dateInput').value;
+      const zone = document.getElementById('timezoneSelect2').value;
+      const unit = document.getElementById('unitSelect2').value;
+
+      if (!datetime) return;
+
+      const localTime = new Date(datetime);
+      const utcTime = new Date(localTime.toLocaleString('en-US', { timeZone: zone }));
+
+      let ts = utcTime.getTime(); // 毫秒
+
+      switch (unit) {
+        case 's': ts = Math.floor(ts / 1000); break;
+        case 'ms': break;
+        case 'us': ts *= 1000; break;
+        case 'ns': ts *= 1_000_000; break;
+      }
+
+      document.getElementById('timestampResult').textContent = ts.toString();
+    }
+  </script>
+</body>
+</html>
