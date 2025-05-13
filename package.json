@@ -1,10 +1,15 @@
 {
   "name": "devtools",
-  "displayName": "DevTools",
-  "description": "",
+  "displayName": "TreasureBox",
+  "description": "常用开发工具，如 UUID、Base64、时间转换等",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.76.0"
+  },
+  "publisher":"MyDevTools",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luckzhangfengbo/DevTools"
   },
   "categories": [
     "Other"
