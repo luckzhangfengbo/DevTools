@@ -1,0 +1,338 @@
+<!-- <!DOCTYPE html>
+  <html lang="zh">
+  <head>
+	<meta charset="UTF-8" />
+	<title>JSON 转 C++ Class</title>
+	<style>
+	  body {
+		font-family: "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+		margin: 0;
+		padding: 30px;
+		background: linear-gradient(to right, #e0f7fa, #f0f9ff);
+		color: #333;
+	  }
+  
+	  h3 {
+		text-align: center;
+		color: #007acc;
+		margin-bottom: 20px;
+	  }
+  
+	  .top-bar {
+		text-align: center;
+		margin-bottom: 16px;
+	  }
+  
+	  button {
+		background-color: #007acc;
+		color: white;
+		padding: 8px 18px;
+		font-size: 14px;
+		border: none;
+		border-radius: 6px;
+		cursor: pointer;
+		font-weight: bold;
+		transition: background-color 0.3s ease;
+	  }
+  
+	  button:hover {
+		background-color: #005f99;
+	  }
+  
+	  .container {
+		display: flex;
+		height: 500px;
+		border-radius: 12px;
+		overflow: hidden;
+		box-shadow: 0 8px 30px rgba(209, 205, 205, 0.636);
+		background-color: #ffffff;
+	  }
+  
+	  textarea {
+		width: 50%;
+		padding: 10px;
+		font-family: monospace;
+		font-size: 14px;
+		border: none;
+		box-sizing: border-box;
+		resize: none;
+		outline: none;
+		background-color: #ffffff;
+		border-right: 1px solid #e0e0e0;
+	  }
+  
+	  .output-panel {
+		width: 50%;
+		display: flex;
+		flex-direction: column;
+	  }
+  
+	  .copy-bar {
+		text-align: right;
+		padding: 10px 16px 0;
+		background-color: #f7f9fa;
+		border-bottom: 1px solid #e0e0e0;
+	  }
+  
+	  .output-panel pre {
+		flex: 1;
+		background-color: #f7f9fa;
+		margin: 0;
+		overflow: auto;
+		white-space: pre-wrap;
+		padding: 10px;
+		font-family: monospace;
+		font-size: 14px;
+		color: #000;
+		box-sizing: border-box;
+	  }
+  
+	  .copy-notice {
+		display: none;
+		text-align: center;
+		background-color: #dff0d8;
+		color: #3c763d;
+		padding: 10px;
+		margin-bottom: 10px;
+		font-size: 14px;
+		border-radius: 4px;
+		width: fit-content;
+		margin: 10px auto;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+	  }
+	</style>
+  </head>
+  <body>
+	<h3>🛠️ JSON 转 C++ Class</h3>
+  
+	<div id="copyNotice" class="copy-notice">已复制到剪贴板!</div>
+  
+	<div class="top-bar">
+	  <button id="convertBtn">转换为 C++</button>
+	</div>
+  
+	<div class="container">
+	  <textarea id="jsonInput" placeholder="请输入 JSON..."></textarea>
+	  <div class="output-panel">
+		<div class="copy-bar">
+		  <button id="copyBtn">复制</button>
+		</div>
+		<pre id="result">（点击“转换为 C++”后显示结果）</pre>
+	  </div>
+	</div>
+  
+	<script>
+        const input = document.getElementById('jsonInput');
+        const result = document.getElementById('result');
+        const convertBtn = document.getElementById('convertBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const copyNotice = document.getElementById('copyNotice');
+      
+        function toCppType(value) {
+          if (typeof value === 'string') return 'std::string';
+          if (typeof value === 'number') return Number.isInteger(value) ? 'int' : 'double';
+          if (typeof value === 'boolean') return 'bool';
+          if (Array.isArray(value)) {
+            if (value.length > 0) {
+              return 'std::vector<' + toCppType(value[0]) + '>';
+            } else {
+              return 'std::vector</* unknown type */>';
+            }
+          }
+          if (typeof value === 'object' && value !== null) return '/* nested object */';
+          return '/* unknown type */';
+        }
+      
+        function jsonToCpp(json, className = "MyClass") {
+          let result = `class ${className} {\npublic:\n`;
+          for (const key in json) {
+            const type = toCppType(json[key]);
+            result += `    ${type} ${key};\n`;
+          }
+          result += '};';
+          return result;
+        }
+      
+        convertBtn.addEventListener('click', () => {
+          try {
+            const json = JSON.parse(input.value);
+            const cppCode = jsonToCpp(json);
+            result.textContent = cppCode;
+          } catch (e) {
+            result.textContent = '转换失败，请检查 JSON 格式';
+          }
+        });
+      
+        copyBtn.addEventListener('click', () => {
+          const text = result.textContent;
+          if (text && text !== '转换失败，请检查 JSON 格式') {
+            navigator.clipboard.writeText(text).then(() => {
+              copyNotice.textContent = '已复制到剪贴板!';
+              copyNotice.style.backgroundColor = '#dff0d8';
+              copyNotice.style.color = '#3c763d';
+              copyNotice.style.display = 'block';
+              setTimeout(() => {
+                copyNotice.style.display = 'none';
+              }, 2000);
+            }).catch(() => {
+              copyNotice.textContent = '复制失败，请检查权限';
+              copyNotice.style.backgroundColor = '#f2dede';
+              copyNotice.style.color = '#a94442';
+              copyNotice.style.display = 'block';
+              setTimeout(() => {
+                copyNotice.style.display = 'none';
+              }, 2000);
+            });
+          }
+        });
+      </script>
+      </body>
+      </html>
+       -->
+
+
+       <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON 转 C++ 或 JS</title>
+    <style>
+        /* 简单的样式 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .output {
+            white-space: pre-wrap;
+            background-color: #f1f1f1;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        .notice {
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 10px;
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>JSON 转换工具</h1>
+        <textarea id="jsonInput" placeholder="请输入 JSON 数据"></textarea><br>
+        <button id="convertBtn">转换为 C++</button>
+        <button id="copyBtn">复制 C++ 代码</button>
+        <div id="result" class="output"></div>
+        <div id="copyNotice" class="notice"></div>
+    </div>
+
+    <script>
+        // 将 JSON 转为 C++ 类定义
+        function jsonToCpp(json, className = "MyClass") {
+            let result = `class ${className} {\npublic:\n`;
+            for (const key in json) {
+                const type = toCppType(json[key]);
+                result += `    ${type} ${key};\n`;
+            }
+            result += '};';
+            return result;
+        }
+
+        // 将 JSON 转为 JS 接口定义
+        function jsonToJsInterface(json, interfaceName = "MyInterface") {
+            let result = `interface ${interfaceName} {\n`;
+            for (const key in json) {
+                const type = toJsType(json[key]);
+                result += `  ${key}: ${type};\n`;
+            }
+            result += '}';
+            return result;
+        }
+
+        // 判断数据类型，转为 C++ 数据类型
+        function toCppType(value) {
+            if (typeof value === 'string') return 'std::string';
+            if (typeof value === 'number') return 'int';
+            if (typeof value === 'boolean') return 'bool';
+            return 'void*'; // 默认类型
+        }
+
+        // 判断数据类型，转为 JS 类型
+        function toJsType(value) {
+            if (typeof value === 'string') return 'string';
+            if (typeof value === 'number') return 'number';
+            if (typeof value === 'boolean') return 'boolean';
+            return 'any'; // 默认类型
+        }
+
+        // 处理 JSON 输入并转换为 C++ 或 JS
+        function getJsonToJsWebviewHtml() {
+            const input = document.getElementById('jsonInput').value;
+            const result = document.getElementById('result');
+            const copyNotice = document.getElementById('copyNotice');
+
+            try {
+                const json = JSON.parse(input);
+                const cppCode = jsonToCpp(json);
+                const jsInterfaceCode = jsonToJsInterface(json);
+
+                result.textContent = `C++ 类定义：\n\n${cppCode}\n\nJS 接口定义：\n\n${jsInterfaceCode}`;
+            } catch (e) {
+                result.textContent = '转换失败，请检查 JSON 格式';
+            }
+        }
+
+        // 复制功能
+        document.getElementById('convertBtn').addEventListener('click', getJsonToJsWebviewHtml);
+
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            const text = document.getElementById('result').textContent;
+            if (text && text !== '转换失败，请检查 JSON 格式') {
+                navigator.clipboard.writeText(text).then(() => {
+                    const copyNotice = document.getElementById('copyNotice');
+                    copyNotice.textContent = '已复制到剪贴板!';
+                    copyNotice.style.backgroundColor = '#dff0d8';
+                    copyNotice.style.color = '#3c763d';
+                    copyNotice.style.display = 'block';
+                    setTimeout(() => {
+                        copyNotice.style.display = 'none';
+                    }, 2000);
+                }).catch(() => {
+                    const copyNotice = document.getElementById('copyNotice');
+                    copyNotice.textContent = '复制失败，请检查权限';
+                    copyNotice.style.backgroundColor = '#f2dede';
+                    copyNotice.style.color = '#a94442';
+                    copyNotice.style.display = 'block';
+                    setTimeout(() => {
+                        copyNotice.style.display = 'none';
+                    }, 2000);
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>

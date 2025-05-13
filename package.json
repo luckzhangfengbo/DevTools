@@ -4,14 +4,16 @@
   "description": "",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.79.0"
+    "vscode": "^1.76.0"
   },
   "categories": [
     "Other"
   ],
-  "icon": "media/tools.png",
+  "icon": "media/theme.png",
   "activationEvents": [
-    "onView:devtools.general" 
+    "onView:devtools.general",
+    "onView:devtools.time",
+    "onView:devtools.coding"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -59,7 +61,15 @@
       {
         "command": "devtools.timestamp.utc",
         "title": "UTC时间"
-      } 
+      },
+      {
+        "command": "devtools.encode.jsonToCpp",
+        "title": "JSON 转 C++ Class"
+      },
+      {
+        "command": "devtools.encode.jsonToPython",
+        "title": "JSON 转 Python 接口"
+      }
     ],
     "viewsContainers": {
       "activitybar": [
@@ -74,19 +84,23 @@
       "devtools": [
         {
           "id": "devtools.general",
-          "name": "通用工具"
+          "name": "通用工具",
+          "icon": "media/general.svg"
         },
         {
           "id": "devtools.time",
-          "name": "时间工具"
+          "name": "时间工具",
+          "icon": "media/time.svg"
         },
         {
           "id": "devtools.coding",
-          "name": "编码辅助"
+          "name": "编码辅助",
+          "icon": "media/coding.svg"
         },
         {
           "id": "devtools.debug",
-          "name": "开发调试工具"
+          "name": "开发调试工具",
+          "icon": "media/tools.png"
         }
       ]
     }
@@ -101,7 +115,7 @@
   "devDependencies": {
     "@types/mocha": "^10.0.8",
     "@types/node": "20.x",
-    "@types/vscode": "^1.79.0",
+    "@types/vscode": "^1.76.0",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.4.1",
     "eslint": "^9.11.1"

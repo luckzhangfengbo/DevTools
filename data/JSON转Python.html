@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>JSON 转 Python Class</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      margin: 0;
+      padding: 30px;
+      background: linear-gradient(to right, #f7fcf9, #f0f9ff);
+      color: #333;
+    }
+
+    h3 {
+      text-align: center;
+      color: #3c763d;
+      margin-bottom: 20px;
+    }
+
+    .top-bar {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    button {
+      background-color: #3c763d;
+      color: white;
+      padding: 8px 18px;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2e5d2e;
+    }
+
+    .container {
+      display: flex;
+      height: 500px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(209, 205, 205, 0.636);
+      background-color: #ffffff;
+    }
+
+    textarea {
+      width: 50%;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 14px;
+      border: none;
+      box-sizing: border-box;
+      resize: none;
+      outline: none;
+      background-color: #ffffff;
+      border-right: 1px solid #e0e0e0;
+    }
+
+    .output-panel {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .copy-bar {
+      text-align: right;
+      padding: 10px 16px 0;
+      background-color: #f7f9fa;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .output-panel pre {
+      flex: 1;
+      background-color: #f7f9fa;
+      margin: 0;
+      overflow: auto;
+      white-space: pre-wrap;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 14px;
+      color: #000;
+      box-sizing: border-box;
+    }
+
+    .copy-notice {
+      display: none;
+      text-align: center;
+      background-color: #dff0d8;
+      color: #3c763d;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      border-radius: 4px;
+      width: fit-content;
+      margin: 10px auto;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+  </style>
+</head>
+<body>
+  <h3>🐍 JSON 转 Python Class</h3>
+
+  <div id="copyNotice" class="copy-notice">已复制到剪贴板!</div>
+
+  <div class="top-bar">
+    <button id="convertBtn">转换为 Python 类</button>
+  </div>
+
+  <div class="container">
+    <textarea id="jsonInput" placeholder="请输入 JSON..."></textarea>
+    <div class="output-panel">
+      <div class="copy-bar">
+        <button id="copyBtn">复制</button>
+      </div>
+      <pre id="result">（点击“转换为 Python 类”后显示结果）</pre>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById('jsonInput');
+    const result = document.getElementById('result');
+    const convertBtn = document.getElementById('convertBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const copyNotice = document.getElementById('copyNotice');
+
+    function capitalize(name) {
+      return name.charAt(0).toUpperCase() + name.slice(1);
+    }
+
+    function guessType(value) {
+      if (typeof value === 'string') return "''";
+      if (typeof value === 'number') return Number.isInteger(value) ? '0' : '0.0';
+      if (typeof value === 'boolean') return 'False';
+      if (value === null) return 'None';
+      if (Array.isArray(value)) return '[]';
+      return '{}';
+    }
+
+    function generatePythonClasses(json, className = "Root", classMap = {}) {
+      const lines = [];
+      const props = [];
+
+      for (const key in json) {
+        const value = json[key];
+        if (Array.isArray(value)) {
+          if (value.length > 0 && typeof value[0] === 'object' && value[0] !== null) {
+            const subClassName = capitalize(key.slice(0, -1));
+            generatePythonClasses(value[0], subClassName, classMap);
+            props.push(\`self.\${key} = []\`);
+          } else {
+            props.push(\`self.\${key} = []\`);
+          }
+        } else if (typeof value === 'object' && value !== null) {
+          const subClassName = capitalize(key);
+          generatePythonClasses(value, subClassName, classMap);
+          props.push(\`self.\${key} = \${subClassName}()\`);
+        } else {
+          props.push(\`self.\${key} = \${guessType(value)}\`);
+        }
+      }
+
+      const classDef = [
+        \`class \${className}:\`,
+        '    def __init__(self):',
+        props.length ? props.map(p => '        ' + p).join('\\n') : '        pass',
+        ''
+      ].join('\\n');
+
+      classMap[className] = classDef;
+      return classMap;
+    }
+
+    convertBtn.addEventListener('click', () => {
+      try {
+        const json = JSON.parse(input.value);
+        const classMap = generatePythonClasses(json);
+        const output = Object.values(classMap).reverse().join('\\n\\n');
+        result.textContent = output;
+      } catch (e) {
+        result.textContent = '转换失败，请检查 JSON 格式';
+      }
+    });
+
+    copyBtn.addEventListener('click', () => {
+      const text = result.textContent;
+      if (text && text !== '转换失败，请检查 JSON 格式') {
+        navigator.clipboard.writeText(text).then(() => {
+          copyNotice.textContent = '已复制到剪贴板!';
+          copyNotice.style.backgroundColor = '#dff0d8';
+          copyNotice.style.color = '#3c763d';
+          copyNotice.style.display = 'block';
+          setTimeout(() => {
+            copyNotice.style.display = 'none';
+          }, 2000);
+        }).catch(() => {
+          copyNotice.textContent = '复制失败，请检查权限';
+          copyNotice.style.backgroundColor = '#f2dede';
+          copyNotice.style.color = '#a94442';
+          copyNotice.style.display = 'block';
+          setTimeout(() => {
+            copyNotice.style.display = 'none';
+          }, 2000);
+        });
+      }
+    });
+  </script>
+</body>
+</html>`
