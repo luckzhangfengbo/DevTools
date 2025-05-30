@@ -1,6 +1,6 @@
 # 变更日志
 
-## [0.0.1] - 2023-10-01
+## [0.0.1] - 2025-3-02
 
 ### 新增
 - 初始版本发布
@@ -24,3 +24,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [Unreleased]
 
 - Initial release
+
+
+
+
+## [0.0.3] - 2025-05-30
+- 增加json格式化搜索功能 
+-
+-

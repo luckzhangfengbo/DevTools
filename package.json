@@ -2,7 +2,7 @@
   "name": "devtools",
   "displayName": "TreasureBox",
   "description": "常用开发工具，如 UUID、Base64、时间转换等",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.76.0"
   },

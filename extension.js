@@ -199,171 +199,215 @@ function activate(context) {
 
 function getJsonFormatHtml() {
 	return `<!DOCTYPE html>
-<html lang="zh">
-<head>
-  <meta charset="UTF-8" />
-  <title>JSON 格式化工具</title>
-  <style>
-    body {
-      font-family: "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-      margin: 0;
-      padding: 30px;
-      background: linear-gradient(to right, #e0f7fa, #f0f9ff);
-      color: #333;
-    }
-
-    h3 {
-      text-align: center;
-      color: #007acc;
-      margin-bottom: 20px;
-    }
-
-    .top-bar {
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    button {
-      background-color: #007acc;
-      color: white;
-      padding: 8px 18px;
-      font-size: 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #005f99;
-    }
-
-    .container {
-      display: flex;
-      height: 500px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 8px 30px rgba(209, 205, 205, 0.636);
-      background-color: #ffffff;
-    }
-
-    textarea {
-      width: 50%;
-      padding: 10px;
-      font-family: monospace;
-      font-size: 14px;
-      border: none;
-      box-sizing: border-box;
-      resize: none;
-      outline: none;
-      background-color: #ffffff;
-      border-right: 1px solid #e0e0e0;
-    }
-
-    .output-panel {
-      width: 50%;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .copy-bar {
-      text-align: right;
-      padding: 10px 16px 0;
-      background-color: #f7f9fa;
-      border-bottom: 1px solid #e0e0e0;
-    }
-
-    .output-panel pre {
-      flex: 1;
-      background-color: #f7f9fa;
-      margin: 0;
-      overflow: auto;
-      white-space: pre-wrap;
-      padding: 10px;
-      font-family: monospace;
-      font-size: 14px;
-      color: red;
-      box-sizing: border-box;
-    }
-
-    .copy-notice {
-      display: none;
-      text-align: center;
-      background-color: #dff0d8;
-      color: #3c763d;
-      padding: 10px;
-      margin-bottom: 10px;
-      font-size: 14px;
-      border-radius: 4px;
-      width: fit-content;
-      margin: 10px auto;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    }
-  </style>
-</head>
-<body>
-  <h3>🌐 JSON 格式化工具</h3>
-
-  <div id="copyNotice" class="copy-notice">已复制到剪贴板!</div>
-
-  <div class="top-bar">
-    <button id="formatBtn">格式化 JSON</button>
-  </div>
-
-  <div class="container">
-    <textarea id="jsonInput" placeholder="请输入 JSON..."></textarea>
-    <div class="output-panel">
-      <div class="copy-bar">
-        <button id="copyBtn">复制</button>
-      </div>
-      <pre id="result">（点击“格式化 JSON”后显示结果）</pre>
-    </div>
-  </div>
-
-  <script>
-    const input = document.getElementById('jsonInput');
-    const result = document.getElementById('result');
-    const formatBtn = document.getElementById('formatBtn');
-    const copyBtn = document.getElementById('copyBtn');
-    const copyNotice = document.getElementById('copyNotice');
-
-    formatBtn.addEventListener('click', () => {
-      try {
-        const json = JSON.parse(input.value);
-        result.textContent = JSON.stringify(json, null, 2);
-      } catch (e) {
-        result.textContent = '格式化失败，请检查文本';
-      }
-    });
-
-    copyBtn.addEventListener('click', () => {
-      const text = result.textContent;
-      if (text && text !== '格式化失败，请检查文本') {
-        navigator.clipboard.writeText(text).then(() => {
-          copyNotice.textContent = '已复制到剪贴板!';
-          copyNotice.style.backgroundColor = '#dff0d8';
-          copyNotice.style.color = '#3c763d';
-          copyNotice.style.display = 'block';
-          setTimeout(() => {
-            copyNotice.style.display = 'none';
-          }, 2000);
-        }).catch(() => {
-          copyNotice.textContent = '复制失败，请检查权限';
-          copyNotice.style.backgroundColor = '#f2dede';
-          copyNotice.style.color = '#a94442';
-          copyNotice.style.display = 'block';
-          setTimeout(() => {
-            copyNotice.style.display = 'none';
-          }, 2000);
-        });
-      }
-    });
-  </script>
-</body>
-</html>
-`;
+  <html lang="zh">
+  <head>
+	<meta charset="UTF-8" />
+	<title>JSON 格式化工具</title>
+	<style>
+	  body {
+		font-family: "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+		margin: 0;
+		padding: 30px;
+		background: linear-gradient(to right, #e0f7fa, #f0f9ff);
+		color: #333;
+	  }
+  
+	  h3 {
+		text-align: center;
+		color: #007acc;
+		margin-bottom: 20px;
+	  }
+  
+	  .top-bar {
+		text-align: center;
+		margin-bottom: 16px;
+	  }
+  
+	  .top-bar input[type="text"] {
+		padding: 8px 12px;
+		margin-left: 12px;
+		width: 220px;
+		font-size: 14px;
+		border-radius: 20px;
+		border: 1px solid #ccc;
+		outline: none;
+		transition: border 0.3s ease, box-shadow 0.3s ease;
+	  }
+  
+	  .top-bar input[type="text"]:focus {
+		border-color: #007acc;
+		box-shadow: 0 0 5px rgba(0, 122, 204, 0.3);
+	  }
+  
+	  button {
+		background-color: #007acc;
+		color: white;
+		padding: 8px 18px;
+		font-size: 14px;
+		border: none;
+		border-radius: 6px;
+		cursor: pointer;
+		font-weight: bold;
+		transition: background-color 0.3s ease;
+	  }
+  
+	  button:hover {
+		background-color: #005f99;
+	  }
+  
+	  .container {
+		display: flex;
+		height: 500px;
+		border-radius: 12px;
+		overflow: hidden;
+		box-shadow: 0 8px 30px rgba(209, 205, 205, 0.636);
+		background-color: #ffffff;
+	  }
+  
+	  textarea {
+		width: 50%;
+		padding: 10px;
+		font-family: monospace;
+		font-size: 14px;
+		border: none;
+		box-sizing: border-box;
+		resize: none;
+		outline: none;
+		background-color: #ffffff;
+		border-right: 1px solid #e0e0e0;
+	  }
+  
+	  .output-panel {
+		width: 50%;
+		display: flex;
+		flex-direction: column;
+	  }
+  
+	  .copy-bar {
+		text-align: right;
+		padding: 10px 16px 0;
+		background-color: #f7f9fa;
+		border-bottom: 1px solid #e0e0e0;
+	  }
+  
+	  .output-panel pre {
+		flex: 1;
+		margin: 0;
+		overflow: auto;
+		white-space: pre-wrap;
+		padding: 10px;
+		font-family: monospace;
+		font-size: 14px;
+		color: red;
+		box-sizing: border-box;
+		background-color: #f7f9fa;
+	  }
+  
+	  .copy-notice {
+		display: none;
+		text-align: center;
+		background-color: #dff0d8;
+		color: #3c763d;
+		padding: 10px;
+		margin-bottom: 10px;
+		font-size: 14px;
+		border-radius: 4px;
+		width: fit-content;
+		margin: 10px auto;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+	  }
+  
+	  .highlight {
+		background-color: yellow;
+		font-weight: bold;
+	  }
+	</style>
+  </head>
+  <body>
+	<h3>🌐 JSON 格式化工具</h3>
+  
+	<div id="copyNotice" class="copy-notice">已复制到剪贴板!</div>
+  
+	<div class="top-bar">
+	  <button id="formatBtn">格式化 JSON</button>
+	  <input type="text" id="searchInput" placeholder="🔍 搜索关键词" />
+	</div>
+  
+	<div class="container">
+	  <textarea id="jsonInput" placeholder="请输入 JSON..."></textarea>
+	  <div class="output-panel">
+		<div class="copy-bar">
+		  <button id="copyBtn">复制</button>
+		</div>
+		<pre id="result">（点击“格式化 JSON”后显示结果）</pre>
+	  </div>
+	</div>
+  
+	<script>
+	  const input = document.getElementById('jsonInput');
+	  const result = document.getElementById('result');
+	  const formatBtn = document.getElementById('formatBtn');
+	  const copyBtn = document.getElementById('copyBtn');
+	  const copyNotice = document.getElementById('copyNotice');
+	  const searchInput = document.getElementById('searchInput');
+  
+	  let rawFormattedText = '';
+  
+	  function highlight(text, keyword) {
+		if (!keyword) return text;
+		const regex = new RegExp(\`(\${keyword})\`, 'gi');
+		return text.replace(regex, '<span class="highlight">$1</span>');
+	  }
+  
+	  function renderWithHighlight(text, keyword) {
+		result.innerHTML = highlight(text, keyword);
+	  }
+  
+	  formatBtn.addEventListener('click', () => {
+		try {
+		  const json = JSON.parse(input.value);
+		  rawFormattedText = JSON.stringify(json, null, 2);
+		  renderWithHighlight(rawFormattedText, searchInput.value.trim());
+		} catch (e) {
+		  rawFormattedText = '';
+		  result.textContent = '格式化失败，请检查文本';
+		}
+	  });
+  
+	  searchInput.addEventListener('input', () => {
+		if (rawFormattedText) {
+		  renderWithHighlight(rawFormattedText, searchInput.value.trim());
+		}
+	  });
+  
+	  copyBtn.addEventListener('click', () => {
+		if (rawFormattedText && rawFormattedText !== '格式化失败，请检查文本') {
+		  navigator.clipboard.writeText(rawFormattedText).then(() => {
+			copyNotice.textContent = '已复制到剪贴板!';
+			copyNotice.style.backgroundColor = '#dff0d8';
+			copyNotice.style.color = '#3c763d';
+			copyNotice.style.display = 'block';
+			setTimeout(() => {
+			  copyNotice.style.display = 'none';
+			}, 2000);
+		  }).catch(() => {
+			copyNotice.textContent = '复制失败，请检查权限';
+			copyNotice.style.backgroundColor = '#f2dede';
+			copyNotice.style.color = '#a94442';
+			copyNotice.style.display = 'block';
+			setTimeout(() => {
+			  copyNotice.style.display = 'none';
+			}, 2000);
+		  });
+		}
+	  });
+	</script>
+  </body>
+  </html>`;
 }
+  
+  
+  
 function getRegexHtml() {
 	return `<!DOCTYPE html>
 <html lang="zh">
